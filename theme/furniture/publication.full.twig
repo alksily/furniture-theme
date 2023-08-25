@@ -78,53 +78,5 @@
             </div>
         </div>
     </section>
-
-
-
-    <section class="section blog-single">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-10 offset-lg-1 col-md-12 col-12">
-                    <div class="single-inner">
-                        <div class="post-details">
-                            <div class="main-content-head">
-                                <div class="post-thumbnils">
-                                    {% include 'mixin/img.twig' with {
-                                        'src': publication.hasFiles() ? publication.getFiles().first().getPublicPath('middle') : 'https://via.placeholder.com/850x460',
-                                        'placeholder': publication.hasFiles() ? publication.getFiles().first().getPublicPath('small') : '',
-                                        'title': publication.title,
-                                        'alt': publication.title,
-                                        'style': 'display:block; height: 460px; width: 100%; object-fit: cover; object-position: center center;'
-                                    } only %}
-                                </div>
-                                <div class="meta-information">
-                                    <h2 class="post-title">
-                                        <a href="/{{ publication.address }}">{{ publication.title }}</a>
-                                    </h2>
-                                    <!-- End Meta Info -->
-                                    <ul class="meta-info">
-                                        <li>
-                                            <a href="#"><i class="lni lni-user"></i> {{ publication.user.getName('short') }}</a>
-                                        </li>
-                                        <li>
-                                            <a href="#"><i class="lni lni-calendar"></i> {{ publication.date|df }}
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="/{{ publication.category.address }}"><i class="lni lni-tag"></i> {{ publication.category.title }}</a>
-                                        </li>
-                                    </ul>
-                                    <!-- End Meta Info -->
-                                </div>
-                                <div class="detail-inner">
-                                    {{ publication.content.full|raw }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
     <!-- End Blog Singel Area -->
 {% endblock %}
