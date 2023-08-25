@@ -1,0 +1,25 @@
+<!--category menu-->
+<div class="vr6-category-sidebar">
+    <a href="#" class="close-ct-menu"><i class="fas fa-xmark"></i></a>
+
+    {% set categories = catalog_category() %}
+    <ul>
+        {% for node in categories.where('parent', NIL) %}
+            {% if categories.where('parent', '=', node.uuid).count() %}
+                <li class="has-submenu">
+                    <a href="#">{{ node.title }}</a>
+                    <i class="fas fa-angle-right"></i>
+
+                    <ul class="submenu-wrapper" style="display: none;">
+                        {% for item in categories.where('parent', '=', node.uuid) %}
+                            <li><a href="/{{ parameter('catalog_address', 'catalog') }}/{{ item.address }}">{{ item.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% else %}
+                <li><a href="/{{ parameter('catalog_address', 'catalog') }}/{{ node.address }}">{{ node.title }}</a></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</div>
+<!--category menu end-->

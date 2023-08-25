@@ -1,0 +1,105 @@
+{% extends 'layout.twig' %}
+
+{#https://html.matethemes.com/venturi/venturi/index-3.html#}
+
+{% block head %}
+    <meta name="description" content="{{ parameter('common_description') }}">
+    <meta name="keywords" content="{{ parameter('common_keywords') }}">
+    <link rel="canonical" href="{{ parameter('common_homepage') }}"/>
+
+    <!-- Favicon -->
+    <link href="/resource/favicon.svg" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="https://cdn.lineicons.com/3.0/lineicons.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-slider@1.8.2/slick/slick.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox@3.2.0/dist/css/glightbox.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+    <link rel="stylesheet" href="/resource/css/main.css" />
+{% endblock %}
+
+{% block body %}
+    <body>
+        <!-- Preloader -->
+        <div class="preloader">
+            <h1 class="display-1">Furniture</h1>
+            <div class="preload-progress">
+                <span></span>
+            </div>
+        </div>
+        <!-- /End Preloader -->
+
+        {% block bodyinner %}
+            {% block page %}
+                <script>
+                    window.catalog = {
+                        events: {
+                            'on:cart:add': (new_item) => {
+                                Swal.fire({
+                                    title: 'Product added to cart',
+                                    text: new_item.title + ' (x' + new_item.quantity + ') now in cart.',
+                                    icon: 'success',
+                                    showCancelButton: true,
+                                    cancelButtonText: 'Continue shopping',
+                                    cancelButtonColor: '#0167F3',
+                                    confirmButtonText: 'Checkout',
+                                    confirmButtonColor: '#081828'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        location.href = '/cart';
+                                    }
+                                });
+                            },
+                            'on:cart:update': (updated_item) => {
+                                Swal.fire({
+                                    title: 'Cart updated',
+                                    text: updated_item.title + ' (x' + updated_item.quantity + ')',
+                                    icon: 'success',
+                                    showCancelButton: true,
+                                    cancelButtonText: 'Continue shopping',
+                                    cancelButtonColor: '#0167F3',
+                                    confirmButtonText: 'Checkout',
+                                    confirmButtonColor: '#081828'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        location.href = '/cart';
+                                    }
+                                });
+                            }
+                        }
+                    }
+                </script>
+
+                {% include 'common/header-main.twig' %}
+
+                {% include 'components/hero.twig' %}
+                {% include 'components/banners.twig' %}
+                {% include 'components/products.twig' with {'label': 'Living Room Collection', 'products': catalog_product([], [], 4)} %}
+                {% include 'components/products.twig' with {'label': 'Popular products', 'products': catalog_product_popular(8)} %}
+                {% include 'components/blog.twig' %}
+                {% include 'components/shipping.twig' %}
+            {% endblock %}
+
+            {% include 'common/mobile-menu.twig' %}
+            {% include 'common/catalog-menu.twig' %}
+            {% include 'common/footer.twig' %}
+        {% endblock %}
+
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery-ui@1.13.2/dist/jquery-ui.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery-zoom@1.7.21/jquery.zoom.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/slick-slider@1.8.2/slick/slick.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/glightbox@3.2.0/dist/js/glightbox.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.1.9/sweetalert2.all.min.js"></script>
+        <script src="/resource/js/main.js"></script>
+
+        {% include 'mixin/img-script.twig' %}
+        {#{% include 'mixin/adbd.twig' %}#}
+        {#{% include 'mixin/cookies.twig' %}#}
+        {% include 'mixin/catalog.twig' %}
+        {% include 'mixin/recaptcha.twig' %}
+    </body>
+{% endblock %}

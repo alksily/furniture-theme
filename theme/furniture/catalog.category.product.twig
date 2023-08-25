@@ -1,0 +1,28 @@
+<!-- Start Product -->
+<div class="col-lg-4 col-md-6" data-catalog-item>
+    <div class="vr5-product-card">
+        <div class="feature-image position-relative h-300">
+            {% include 'mixin/img.twig' with {
+                'src': product.hasFiles() ? product.getFiles().first().getPublicPath('middle') : 'https://via.placeholder.com/335x335',
+                'title': product.title,
+                'alt': product.title,
+                'class': 'img-fluid',
+                'style': 'object-fit: contain;object-position: center;'
+            } only %}
+
+            <div class="action-box">
+                {# add attr data-catalog-item-add to btn #}
+                <a href="javascript:void(0)" class="cart-btn" data-catalog-item-add>Add to Cart</a>
+            </div>
+        </div>
+        <div class="product-content">
+            <span class="fw-semibold subtitle text-uppercase">{{ categories.firstWhere('uuid', product.category).title }}</span>
+            <a href="/{{ parameter('catalog_address', 'catalog') }}/{{ product.address }}"><h6 class="fw-semibold mt-3">{{ product.title }}</h6></a>
+            <span class="text-main-color fw-bold fs-sm">${{ catalog_product_show_price(product) }}</span>
+        </div>
+    </div>
+
+    {# include product options #}
+    {% include 'catalog.product.options.twig' with {'categories': categories, 'product': product, 'user': user} only %}
+</div>
+<!-- End Product -->

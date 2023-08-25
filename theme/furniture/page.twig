@@ -1,0 +1,26 @@
+{% extends 'main.twig' %}
+
+{% block title %}{{ page.meta.title ? page.meta.title : page.title }} | {{ parent() }}{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+    <meta name="description" content="{{ page.meta.description }}">
+    <meta name="keywords" content="{{ page.meta.keywords }}">
+{% endblock %}
+
+{% block page %}
+    {% include 'common/header.twig' %}
+    {% include 'common/breadcrumbs.twig' with {'title': page.title} %}
+
+    <!-- Start Page Area -->
+    {% block content %}
+        <div class="ptb-120 bg-white">
+            <div class="container">
+                {{ page.content|raw }}
+            </div>
+        </div>
+    {% endblock %}
+    <!-- End Page Area -->
+    
+    {% include 'components/shipping.twig' %}
+{% endblock %}

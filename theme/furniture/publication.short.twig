@@ -1,0 +1,22 @@
+<!-- Start Single Blog -->
+<div class="blog-list-single-item mb-60">
+    <div class="feature-thumbnail overflow-hidden mb-40">
+        <a href="/{{ item.address }}">
+            {% include 'mixin/img.twig' with {
+                'src': item.hasFiles() ? item.getFiles().first().getPublicPath('middle') : 'https://via.placeholder.com/300x215',
+                'placeholder': item.hasFiles() ? item.getFiles().first().getPublicPath('small') : '',
+                'title': item.title,
+                'alt': item.title,
+                'class': 'img-fluid',
+            } only %}
+        </a>
+    </div>
+    <div class="blog-meta d-flex align-items-center gap-3">
+        <span>{{ item.date|df }}</span>
+        <span>{{ item.user.getName('short') }}</span>
+    </div>
+    <a href="/{{ item.address }}"><h3 class="mt-30 fw-medium mb-40">{{ item.title }}</h3></a>
+    <p class="mb-40">{{ publication.content.short|raw }}</p>
+    <a href="/{{ item.address }}" class="explore-btn">Read Details</a>
+</div>
+<!-- End Single Blog -->

@@ -1,0 +1,10 @@
+{% if user == false %}
+    <a href="/user/login" class="infobar-link text-uppercase fs-sm fw-semibold">Login</a>
+    <a href="/user/login" class="infobar-link text-uppercase fs-sm fw-semibold">Register</a>
+{% else %}
+    <a href="/user/profile" class="infobar-link text-uppercase fs-sm fw-semibold">{{ user.getName('short') ?? user.username }}</a>
+    {% if user.group and 'cup:main' in user.group.access %}
+        <a href="/cup" class="infobar-link text-uppercase fs-sm fw-semibold" target="_blank">CUP</a>
+    {% endif %}
+    <a href="/user/logout" class="infobar-link text-uppercase fs-sm fw-semibold">Logout</a>
+{% endif %}

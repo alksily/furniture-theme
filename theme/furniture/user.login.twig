@@ -1,0 +1,117 @@
+{% extends 'main.twig' %}
+
+{% block title %}Login | {{ parent() }}{% endblock %}
+
+{% block page %}
+    {% include 'common/header.twig' %}
+    {% include 'common/breadcrumbs.twig' with {
+        'title': 'Login'
+    } %}
+
+    <!-- Start Account Area -->
+    <div class="account-login section">
+        <div class="container">
+            <div class="row mt-30">
+                <div class="col-lg-6 offset-lg-3 col-md-10 offset-md-1 col-12">
+                    <form class="card login-form border-0" method="post">
+                        <div class="card-body">
+                            <div class="title">
+                                <h3>Login Now</h3>
+                                <p>You can login using your social media account or email address.</p>
+                            </div>
+
+                            {% if provider == 'self' %}
+                                {% set other = false %}
+
+                                {% if oauth %}
+                                    <div class="social-login">
+                                        <div class="row">
+                                            {% for type in oauth %}
+                                                {% set other = true %}
+                                                <div class="col-lg-4 col-md-6 col-12 mb-1">
+                                                    <a href="/user/oauth/{{ type }}" class="btn {{ type }}-btn" >
+                                                        {{ type }}
+                                                    </a>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                {% if parameter('user_auth_code_is_enabled', 'no') == 'yes' %}
+                                    {% set other = true %}
+                                    <a href="?provider=code" class="btn btn-outline-secondary btn-block d-block text-uppercase mt-1">Login via Code</a>
+                                {% endif %}
+
+                                {% if other %}
+                                    <div class="alt-option">
+                                        <span>Or</span>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+
+                            {% if identifier == 'email' %}
+                                {% include 'mixin/form.twig' with {
+                                    'label': 'E-Mail',
+                                    'type': 'email',
+                                    'name': 'email',
+                                    'args': {
+                                        'class': ['theme-input'],
+                                    }
+                                } %}
+                            {% elseif identifier == 'username' %}
+                                {% include 'mixin/form.twig' with {
+                                    'label': 'Username',
+                                    'type': 'text',
+                                    'name': 'username',
+                                    'args': {
+                                        'class': ['theme-input'],
+                                    }
+                                } %}
+                            {% else %}
+                                {% include 'mixin/form.twig' with {
+                                    'label': 'Phone',
+                                    'type': 'tel',
+                                    'name': 'phone',
+                                    'args': {
+                                        'class': ['theme-input'],
+                                    }
+                                } %}
+                            {% endif %}
+
+                            {% if provider == 'code' and parameter('user_auth_code_is_enabled', 'no') == 'yes' %}
+                                {% include 'mixin/form.twig' with {
+                                    'label': 'Code',
+                                    'type': 'text',
+                                    'name': 'code',
+                                    'postfix_btn': '<button class="btn btn-outline-secondary btn-block text-uppercase px-2" type="submit" name="sendcode">Send code</button>',
+                                    'args': {
+                                        'placeholder': '000-000-000',
+                                        'autocomplete': false,
+                                        'class': ['theme-input'],
+                                    }
+                                } %}
+                            {% else %}
+                                {% include 'mixin/form.twig' with {
+                                    'label': 'Password',
+                                    'type': 'password',
+                                    'name': 'password',
+                                    'args': {
+                                        'class': ['theme-input'],
+                                    }
+                                } %}
+                            {% endif %}
+
+                            <div class="button my-32">
+                                <button class="template-btn primary-btn w-100" type="submit">Login</button>
+                            </div>
+                            <p class="outer-link">Don't have an account? <a href="/user/register">Register here </a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Account Area -->
+{% endblock %}

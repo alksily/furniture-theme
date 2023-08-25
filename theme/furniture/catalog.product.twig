@@ -1,0 +1,224 @@
+{% extends 'main.twig' %}
+
+{% block title %}{{ product.meta.title ? product.meta.title : (product.title ?? 'Product') }} | {{ parent() }}{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+    <meta name="description" content="{{ product.meta.description }}">
+    <meta name="keywords" content="{{ product.meta.keywords }}">
+{% endblock %}
+
+{% block page %}
+    <script>
+        window.catalog = {
+            events: {
+                'on:cart:add': (new_item) => {
+                    Swal.fire({
+                        title: 'Product added to cart',
+                        text: new_item.title + ' (x' + new_item.quantity + ') now in cart.',
+                        icon: 'success',
+                        showCancelButton: true,
+                        cancelButtonText: 'Continue shopping',
+                        cancelButtonColor: '#0167F3',
+                        confirmButtonText: 'Checkout',
+                        confirmButtonColor: '#081828'
+                    }).then((result) => {
+                        if (result.value) {
+                            location.href = '/cart';
+                        }
+                    });
+                },
+                'on:cart:update': (updated_item) => {
+                    Swal.fire({
+                        title: 'Cart updated',
+                        text: updated_item.title + ' (x' + updated_item.quantity + ')',
+                        icon: 'success',
+                        showCancelButton: true,
+                        cancelButtonText: 'Continue shopping',
+                        cancelButtonColor: '#0167F3',
+                        confirmButtonText: 'Checkout',
+                        confirmButtonColor: '#081828'
+                    }).then((result) => {
+                        if (result.value) {
+                            location.href = '/cart';
+                        }
+                    });
+                }
+            }
+        }
+    </script>
+
+    {% include 'common/header.twig' %}
+    {% include 'common/breadcrumbs.twig' with {
+        'catalog': 'Catalog',
+        'parents': catalog_category_parents(category),
+        'title': product.meta.title ? product.meta.title : (product.title ?? 'Product')
+    } %}
+
+    <!-- Start Item Details -->
+    <section class="vr-prodcuct-details ptb-140">
+        <div class="container" data-catalog-item>
+            <div class="row">
+                <div class="col-xl-6">
+                    <div class="vr-product-double-slider">
+                        <div class="vr-product-thumb position-relative">
+                            {% if product.special %}
+                                <span class="badge sale-badge">Sale</span>
+                            {% endif %}
+
+                            <div class="vr-poroduct-single-slider">
+                                {% for index, file in product.getFiles().sortBy('date') %}
+                                    <div class="single-item text-center">
+                                        <span class="zoom-on-hover d-inline-block">
+                                            {% include 'mixin/img.twig' with {
+                                                'src': file.getPublicPath('full'),
+                                                'placeholder': file.getPublicPath('small'),
+                                                'title': product.title,
+                                                'class': 'img-fluid mood-multiply d-inline-block',
+                                                'alt': product.title ~ ' ' ~ index,
+                                                'style': 'height: 370px; width: 440px;object-fit: contain;object-position: center center;'
+                                            } only %}
+                                        </span>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="vr-product-thumb-control mt-4">
+                            {% for index, file in product.getFiles().sortBy('date') %}
+                                <div class="single-item text-center">
+                                    {% include 'mixin/img.twig' with {
+                                        'src': file.getPublicPath('small'),
+                                        'placeholder': file.getPublicPath('small'),
+                                        'title': product.title,
+                                        'class': 'img-fluid mood-multiply',
+                                        'alt': product.title ~ ' ' ~ index,
+                                        'style': 'height: 148px; width: 148px;'
+                                    } only %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-6">
+                    <div class="vr-product-details-content mt-5 mt-xl-0">
+                        <h3 class="mb-4 fw-semibold">{{ product.title }}</h3>
+                        <h5 class="mb-0 mt-30">
+                            {% if product.discount %}
+                                ${{ product.price - product.discount }}
+                                <del>${{ catalog_product_show_price(product) }}</del>
+                            {% else %}
+                                ${{ catalog_product_show_price(product) }}
+                            {% endif %}
+                        </h5>
+
+                        {% if product.extra is not empty %}
+                            <p class="mb-40 mt-30">{{ product.extra|raw }}</p>
+                        {% endif %}
+
+                        {#<div class="color-variant">
+                            <span class="fs-sm text-uppercase text-main-color fw-medium">Color</span>
+                            <ul class="color-list mt-20">
+                                <li class="red"><a href="#"></a></li>
+                                <li class="blue"><a href="#"></a></li>
+                                <li class="green"><a href="#"></a></li>
+                            </ul>
+                        </div>#}
+
+                        <div class="d-flex align-items-center mt-30 gap-3">
+                            <div class="quantity-box">
+                                {# add attr data-catalog-item-attr="quantity" to quantity input #}
+                                <input type="text" value="1" min="1" data-catalog-item-attr="quantity">
+                            </div>
+
+                            {# add attr data-catalog-item-add to btn #}
+                            <a href="#" class="template-btn primary-btn fs-sm text-uppercase h-40" data-catalog-item-add>ADD To Cart</a>
+                        </div>
+                        <ul class="product-meta mt-32">
+                            {% if product.vendorcode %}<li>Vendorcode: {{ product.vendorcode }}</li>{% endif %}
+                            <li>Category: <a href="/{{ parameter('catalog_address', 'catalog') }}/{{ category.address }}">{{ category.title }}</a></li>
+                            {% if product.tags %}<li>Tags: {{ product.tags|join(', ') }}</li>{% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Item Details -->
+
+    <!--product single tab start-->
+    <section class="single-products-info pb-140">
+        <div class="container">
+            <div class="single-product-tab">
+                <ul class="nav nav-tabs border-bottom" role="tablist">
+                    <li><a href="#tab-1" data-bs-toggle="tab" class="active" aria-selected="true" role="tab">Description</a></li>
+                    <li><a href="#tab-2" data-bs-toggle="tab" aria-selected="false" tabindex="-1" role="tab">Addition information</a></li>
+                </ul>
+                <div class="tab-content mt-32">
+                    <div class="tab-pane fade active show" id="tab-1" role="tabpanel">
+                        <div class="d-flex align-items-center justify-content-between gap-4 flex-wrap flex-lg-nowrap">
+                            <div class="product-description">
+                                <p class="mb-0 fw-light">{{ product.description|raw }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tab-2" role="tabpanel">
+                        <div class="row">
+                            <div class="col-12 col-md-4">
+                                <b>Features</b>
+                                <ul class="product-meta d-flex gap-2 flex-column">
+                                    {% if product.field1 %}<li><span>{{ category.product.field_1 }}</span>: {{ product.field1 }}</li>{% endif %}
+                                    {% if product.field2 %}<li><span>{{ category.product.field_2 }}</span>: {{ product.field2 }}</li>{% endif %}
+                                    {% if product.field3 %}<li><span>{{ category.product.field_3 }}</span>: {{ product.field3 }}</li>{% endif %}
+                                    {% if product.field4 %}<li><span>{{ category.product.field_4 }}</span>: {{ product.field4 }}</li>{% endif %}
+                                    {% if product.field5 %}<li><span>{{ category.product.field_5 }}</span>: {{ product.field5 }}</li>{% endif %}
+                                </ul>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <b>Specifications</b>
+                                <ul class="product-meta d-flex gap-2 flex-column">
+                                    {% if product.country %}<li><span>Country:</span> {{ product.country }}</li>{% endif %}
+                                    {% if product.manufacturer %}<li><span>Manufacturer:</span> {{ product.manufacturer }}</li>{% endif %}
+                                    {% if product.vendorcode %}<li><span>Vendorcode:</span> {{ product.vendorcode }}</li>{% endif %}
+                                    {% if product.barcode %}<li><span>Barcode:</span> {{ product.barcode }}</li>{% endif %}
+                                    {% if product.volume %}<li><span>Volume:</span> {{ product.getVolumeWithUnit() }}</li>{% endif %}
+                                    {% if product.tax %}<li><span>Stock</span>: {{ product.stock > 0 ? '<span>На складе</span>' : '<span>Отсутствует</span>' }}</li>{% endif %}
+                                    {% if product.stock %}<li><span>Tax</span>: {{ product.tax }}</li>{% endif %}
+                                    {% if product.dimension %}<li><span>Dimension</span>: {{ product.dimension|join('&times;')|raw }} cm</li>{% endif %}
+                                </ul>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <b>Attributes:</b>
+                                <ul class="product-meta d-flex gap-2 flex-column">
+                                    {% for attribute in product.getAttributes() %}
+                                        <li><span>{{ attribute.title }}</span>: {{ attribute.value }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+
+                        {% if product.hasRelations() %}
+                            <div class="row">
+                                <div class="col-12">
+                                    <b>Related products:</b>
+                                    <ul class="normal-list">
+                                        {% for relative in product.getRelations() %}
+                                            <li>
+                                        <span>
+                                            <a href="/{{ parameter('catalog_address', 'catalog') }}/{{ relative.related.address }}">
+                                                {{ relative.related.title }}
+                                            </a>
+                                        </span>: ${{ relative.related.price }} &times; {{ relative.count }} &equals; ${{ relative.related.price * relative.count }}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--product single tab end-->
+{% endblock %}

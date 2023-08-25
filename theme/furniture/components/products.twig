@@ -1,0 +1,16 @@
+{% if products|count %}
+    <!-- Start Trending Product Area -->
+    <section class="vr6-filter-section pt-120">
+        <div class="container">
+            <div class="section-title text-center text-lg-start">
+                <h3 class="mb-0 fw-medium">{{ label }}</h3>
+            </div>
+            <div class="row g-4 mt-5 grid_3">
+                {% for product in products %}
+                    {% include 'components/products-item.twig' with {'product': product} %}
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <!-- End Trending Product Area -->
+{% endif %}

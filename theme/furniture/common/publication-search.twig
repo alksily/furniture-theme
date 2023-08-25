@@ -1,0 +1,19 @@
+<form action="/search">
+    {% include 'mixin/form.twig' with {
+        'type': 'hidden',
+        'name': 't',
+        'args': {
+            'value': 'publication',
+        }
+    } %}
+    {% include 'mixin/form.twig' with {
+        'type': 'text',
+        'name': 'q',
+        'args': {
+            'class': 'theme-input fw-light',
+            'required': true,
+            'value': _request.q,
+            'placeholder': 'Search Here...',
+        }
+    } %}
+</form>

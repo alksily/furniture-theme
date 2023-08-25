@@ -1,0 +1,28 @@
+<!-- Start Breadcrumbs -->
+<div class="breadcrumb-section pt-40 pb-40">
+    <div class="container-1700">
+        <p class="breadcrumb-text mb-0">
+            <a href="/">Home</a>
+
+            {% if catalog %}
+                /
+                <a href="/{{ parameter('catalog_address', 'catalog') }}">{{ catalog }}</a>
+            {% endif %}
+
+            {% for item in parents %}
+                /
+                {% if item.title %}
+                    <a href="/{{ parameter('catalog_address', 'catalog') }}/{{ item.address }}">{{ item.title }}</a>
+                {% else %}
+                    <span class="text-main-color">{{ item }}</span>
+                {% endif %}
+            {% endfor %}
+
+            {% if title %}
+                /
+                <span class="text-main-color">{{ title }}</span>
+            {% endif %}
+        </p>
+    </div>
+</div>
+<!-- End Breadcrumbs -->

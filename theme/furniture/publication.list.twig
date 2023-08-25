@@ -1,0 +1,70 @@
+
+{% extends 'main.twig' %}
+
+{% block title %}{{ category.meta.title ? category.meta.title : category.title }} | {{ parent() }}{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+    <meta name="description" content="{{ category.meta.description }}">
+    <meta name="keywords" content="{{ category.meta.keywords }}">
+
+    <link rel="alternate" type="application/rss+xml" title="{{ parameter('common_title') }}" href="{{ parameter('common_homepage') }}/{{ category.rss() }}">
+{% endblock %}
+
+{% block page %}
+    {% include 'common/header.twig' %}
+    {% include 'common/breadcrumbs.twig' with {'title': category.meta.title ? category.meta.title : category.title} %}
+
+    <!-- Start Blog Singel Area -->
+    <div class="bp-blog-section ptb-140">
+        <div class="container">
+            <div class="row g-5 g-xl-4">
+                <div class="col-xl-8">
+                    <div class="blog-list-items">
+                        {% for item in publications %}
+                            <!-- Start Single Blog -->
+                            {% include category.template.short with {'categories': categories, 'item': item} only %}
+                            <!-- End Single Blog -->
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="col-xl-4">
+                    <div class="blog-sidebar">
+                        <div class="sidebar-widget search-widget">
+                            <h4 class="widget-title position-relative fw-normal mb-5">Search Here</h4>
+                            {% include 'common/publication-search.twig' %}
+                        </div>
+
+                        <div class="sidebar-widget latest-post-widget mt-60">
+                            <h4 class="widget-title position-relative fw-normal mb-5">Latest Posts</h4>
+                            <ul class="latest-posts">
+                                {% for item in publication([], {'date': 'desc'}, 3) %}
+                                    <li class="d-flex align-items-center gap-3">
+                                        <div class="feature-image pe-1">
+                                            <a href="/{{ item.address }}">
+                                                {% set category = categories.firstWhere('uuid', item.category) %}
+                                                {% set obj = item.hasFiles() ? item: category %}
+                                                {% include 'mixin/img.twig' with {
+                                                    'src': obj.hasFiles() ? obj.getFiles().first().getPublicPath('small') : 'https://via.placeholder.com/100x100',
+                                                    'class': 'img-fluid',
+                                                } only %}
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <span class="fs-sm fw-light text-color date">{{ item.date|df }}</span>
+                                            <a href="/{{ item.address }}">
+                                                <h6 class="mb-0 mt-3 fw-regular">{{ item.title }}</h6>
+                                            </a>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Blog Singel Area -->
+{% endblock %}

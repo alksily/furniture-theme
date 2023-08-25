@@ -1,0 +1,25 @@
+{% if products.filtered.count() %}
+    {% for attribute in category.getAttributes() %}
+        <!-- Start Widget -->
+        <div class="sidebar-widget color-select-widget mt-60">
+            <h4 class="widget-title position-relative mb-5">{{ attribute.title }}</h4>
+            <ul class="color-select">
+                {% for value, count in attribute.getValuesWithCounts(category.getNested(categories)) %}
+                    <li>
+                        <label>
+                            <input type="radio"
+                                   name="{{ attribute.uuid }}"
+                                   value="{{ value }}"
+                                   id="{{ attribute.uuid }}"
+                                    {{ _request[attribute.address] == value ? 'checked' : '' }}
+                                   onchange="(() => {location = '{{ non_page_path() }}{{ page ? '/' ~ page : '' }}{{ current_query(attribute.address, value|trim) }}'})()"
+                            >
+                            <span>{{ value }} <span>({{ count }})</span></span>
+                        </label>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <!-- End Widget -->
+    {% endfor %}
+{% endif %}

@@ -1,0 +1,13 @@
+{% set pages = (pagination.count / pagination.page)|round(0, 'ceil') %}
+
+{% if pages > 1 %}
+    <!-- Pagination -->
+    <ul class="template-pagination d-inline-flex align-items-center gap-3">
+        {% for page in 0..pages-1 %}
+            <li class="{{ is_current_page_number(page) ? 'active' : '' }}">
+                <a href="{{ non_page_path() }}{{ page ? '/' ~ page : '' }}{{ current_query() }}">{{ page + 1 }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <!--/ End Pagination -->
+{% endif %}
