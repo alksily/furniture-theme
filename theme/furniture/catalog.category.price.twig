@@ -1,18 +1,18 @@
 <!-- Start Widget -->
 <div class="sidebar-widget filter-widget mt-60">
-    <h4 class="widget-title position-relative mb-5">Price Range</h4>
+    <h4 class="widget-title position-relative mb-5">Max Price</h4>
     <input id="price-range"
            type="range"
            class="form-range"
            step="1"
            min="{{ products.all.min('price') }}"
            max="{{ products.all.max('price') }}"
-           value="{{ _request.price.min ?? products.all.avg('price')|number_format(2, '.', ',') }}"
+           value="{{ _request.price.max ?? products.all.max('price')|number_format(2, '.', ',') }}"
            onchange="(() => {location = '{{ non_page_path() }}{{ page ? '/' ~ page : '' }}{{ current_query(attribute.address, attr.value|trim) }}'})()"
     >
     <div class="range-inner">
         <label>$</label>
-        <input type="number" id="rangePrimary" placeholder="{{ _request.price.min ?? products.all.avg('price')|number_format(2, '.', ',') }}" />
+        <input type="number" id="rangePrimary" placeholder="{{ _request.price.max ?? products.all.max('price')|number_format(2, '.', ',') }}" />
     </div>
 </div>
 <!-- End Widget -->
@@ -30,7 +30,7 @@
                 let val = $(e.currentTarget).val();
 
                 let queryParams = new URLSearchParams(window.location.search);
-                    queryParams.set('price[min]', val);
+                    queryParams.set('price[max]', val);
 
                 location = location.pathname + '/?' + queryParams.toString();
             });

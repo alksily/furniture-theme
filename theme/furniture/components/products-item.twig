@@ -22,7 +22,7 @@
             <span>{{ categories.firstWhere('uuid', product.category).title }}</span>
             <a href="/{{ parameter('catalog_address', 'catalog') }}/{{ product.address }}"><h6 class="fw-semibold">{{ product.title }}</h6></a>
             <div class="pricing">
-                <span>${{ catalog_product_show_price(product) }}</span>
+                <span>${{ product.getPriceCalculated(catalog_product_price_type()) }}</span>
             </div>
         </div>
     </div>

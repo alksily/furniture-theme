@@ -20,7 +20,7 @@
             <a href="javascript:void(0)">Catalog</a>
             <i class="fas fa-angle-down"></i>
             <ul class="submenu-wrapper">
-                {% for node in catalog_category({'parent': NIL}) %}
+                {% for node in catalog_category({'parent_uuid': null}) %}
                     <li><a href="/{{ parameter('catalog_address', 'catalog') }}/{{ node.address }}">{{ node.title }}</a></li>
                 {% endfor %}
             </ul>

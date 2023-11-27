@@ -51,7 +51,7 @@
     {% include 'common/header.twig' %}
     {% include 'common/breadcrumbs.twig' with {
         'catalog': 'Catalog',
-        'parents': catalog_category_parents(category),
+        'parents': category.getParents(),
         'title': product.meta.title ? product.meta.title : (product.title ?? 'Product')
     } %}
 
@@ -104,11 +104,12 @@
                     <div class="vr-product-details-content mt-5 mt-xl-0">
                         <h3 class="mb-4 fw-semibold">{{ product.title }}</h3>
                         <h5 class="mb-0 mt-30">
+                            {% set price = product.getPriceCalculated(catalog_product_price_type()) %}
                             {% if product.discount %}
-                                ${{ product.price - product.discount }}
-                                <del>${{ catalog_product_show_price(product) }}</del>
+                                ${{ price }}
+                                <span>${{ price + product.discount }}</span>
                             {% else %}
-                                ${{ catalog_product_show_price(product) }}
+                                ${{ price }}
                             {% endif %}
                         </h5>
 
@@ -128,11 +129,21 @@
                         <div class="d-flex align-items-center mt-30 gap-3">
                             <div class="quantity-box">
                                 {# add attr data-catalog-item-attr="quantity" to quantity input #}
-                                <input type="text" value="1" min="1" data-catalog-item-attr="quantity">
+                                <input type="number"
+                                       class="form-control"
+                                       id="quantity"
+                                       data-catalog-item-attr="quantity"
+                                       value="{{ product.quantityMin }}"
+                                       min="{{ product.quantityMin }}"
+                                       step="{{ product.quantity }}"
+                                >
                             </div>
 
                             {# add attr data-catalog-item-add to btn #}
                             <a href="#" class="template-btn primary-btn fs-sm text-uppercase h-40" data-catalog-item-add>ADD To Cart</a>
+
+                            {# include product options #}
+                            {% include 'catalog.product.options.twig' with {'categories': categories, 'product': product, 'user': user} only %}
                         </div>
                         <ul class="product-meta mt-32">
                             {% if product.vendorcode %}<li>Vendorcode: {{ product.vendorcode }}</li>{% endif %}
@@ -182,9 +193,11 @@
                                     {% if product.vendorcode %}<li><span>Vendorcode:</span> {{ product.vendorcode }}</li>{% endif %}
                                     {% if product.barcode %}<li><span>Barcode:</span> {{ product.barcode }}</li>{% endif %}
                                     {% if product.volume %}<li><span>Volume:</span> {{ product.getVolumeWithUnit() }}</li>{% endif %}
-                                    {% if product.tax %}<li><span>Stock</span>: {{ product.stock > 0 ? '<span>На складе</span>' : '<span>Отсутствует</span>' }}</li>{% endif %}
+                                    {% if product.dimension.weight_class %}<li><span>Volume:</span> {{ product.getWeightWithClass() }}</li>{% endif %}
+                                    {% if product.tax %}<li><span>Stock</span>: {{ product.stock > 0 ? '<span>In stock</span>' : '<span>Out of stock</span>' }}</li>{% endif %}
                                     {% if product.stock %}<li><span>Tax</span>: {{ product.tax }}</li>{% endif %}
-                                    {% if product.dimension %}<li><span>Dimension</span>: {{ product.dimension|join('&times;')|raw }} cm</li>{% endif %}
+                                    {% if product.dimension.length_class %}<li><span>Dimension</span>: {{ product.getSpecificationWithClass() }}</li>{% endif %}
+
                                 </ul>
                             </div>
                             <div class="col-12 col-md-4">

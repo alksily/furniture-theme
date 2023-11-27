@@ -6,14 +6,25 @@
                 <div class="hm2-footer-widget">
                     <h5 class="mb-40 fw-medium text-capitalize">Showroom &amp; Store</h5>
                     <div class="footer-address">
-                        <a href="tel:{{ parameter('var_phone', '+1 (900) 00 000 0000') }}">
-                            {{ parameter('var_phone', '+1 (900) 00 000 0000') }}
-                        </a>
-                        <br>
-                        <a href="mailto:{{ parameter('var_email', 'support@example.com') }}" class="mail">
-                            {{ parameter('var_email', 'support@example.com') }}
-                        </a>
-                        <p class="mt-32">219 Geom Street. UYS Office 215 Frankfurt-Germany</p>
+                        {% for store in reference('store_location') %}
+                            <div class="mb-3">
+                                <h3>{{ store.title }}</h3>
+                                {% if store.value.contact.phone %}
+                                    <p class="phone">Phone:
+                                        <a href="tel:{{ store.value.contact.phone }}">
+                                            {{ store.value.contact.phone }}
+                                        </a>
+                                    </p>
+                                {% endif %}
+                                <p>{{ store.value.address }}</p>
+                                <p>{{ store.value.times|replace({'\n': '<br>'})|raw }}</p>
+                                {% if store.value.contact.email %}
+                                    <p class="mail">
+                                        <a href="mailto:{{ store.value.contact.email }}">{{ store.value.contact.email }}</a>
+                                    </p>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -21,9 +32,9 @@
                 <div class="footer-widget footer-nav-widget">
                     <h5 class="widget-title mb-40 fw-medium text-capitalize">Follow Us On</h5>
                     <ul class="footer-links">
-                        <li><a href="{{ parameter('var_soc_facebook', '#') }}"><i class="fa-brands fa-square-facebook"></i> Facebook</a></li>
-                        <li><a href="{{ parameter('var_soc_twitter', '#') }}"><i class="fa-brands fa-square-twitter"></i> Twitter</a></li>
-                        <li><a href="{{ parameter('var_soc_instagram', '#') }}"><i class="fa-brands fa-square-instagram"></i> Instagram</a></li>
+                        {% for title, data in reference('social_network', true) %}
+                            <li><a href="{{ title.url }}"><i class="fa-brands fa-square-{{ title|lower }} fa-{{ title|lower }}"></i> {{ title }}</a></li>
+                        {% endfor %}
                     </ul>
                 </div>
             </div>

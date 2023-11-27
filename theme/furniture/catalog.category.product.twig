@@ -18,7 +18,7 @@
         <div class="product-content">
             <span class="fw-semibold subtitle text-uppercase">{{ categories.firstWhere('uuid', product.category).title }}</span>
             <a href="/{{ parameter('catalog_address', 'catalog') }}/{{ product.address }}"><h6 class="fw-semibold mt-3">{{ product.title }}</h6></a>
-            <span class="text-main-color fw-bold fs-sm">${{ catalog_product_show_price(product) }}</span>
+            <span class="text-main-color fw-bold fs-sm">${{ product.getPriceCalculated(catalog_product_price_type()) }}</span>
         </div>
     </div>
 

@@ -2,16 +2,15 @@
 <div class="vr6-category-sidebar">
     <a href="#" class="close-ct-menu"><i class="fas fa-xmark"></i></a>
 
-    {% set categories = catalog_category() %}
     <ul>
-        {% for node in categories.where('parent', NIL) %}
-            {% if categories.where('parent', '=', node.uuid).count() %}
+        {% for node in catalog_category({'parent_uuid': null}) %}
+            {% if categories.where('parent_uuid', '=', node.uuid).count() %}
                 <li class="has-submenu">
                     <a href="#">{{ node.title }}</a>
                     <i class="fas fa-angle-right"></i>
 
                     <ul class="submenu-wrapper" style="display: none;">
-                        {% for item in categories.where('parent', '=', node.uuid) %}
+                        {% for item in categories.where('parent_uuid', '=', node.uuid) %}
                             <li><a href="/{{ parameter('catalog_address', 'catalog') }}/{{ item.address }}">{{ item.title }}</a></li>
                         {% endfor %}
                     </ul>

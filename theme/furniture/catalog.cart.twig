@@ -1,6 +1,6 @@
 {% extends 'main.twig' %}
 
-{% block title %}Корзина | {{ parent() }}{% endblock %}
+{% block title %}Cart | {{ parent() }}{% endblock %}
 
 {% block page %}
     <script>
@@ -108,7 +108,8 @@
             display: inline;
         }
 
-        [data-catalog-cart-data] {
+        [data-catalog-cart-data],
+        [data-catalog-cart-delivery] {
             border: 1px solid var(--primary-color);
             font-style: italic;
             margin-bottom: 30px;
@@ -222,6 +223,24 @@
                                 </h6>
                                 <section class="checkout-steps-form-content collapse" id="collapseFour" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
                                     <div class="row">
+                                        <div class="col-12">
+                                            <div class="single-form form-default">
+                                                <label>Delivery Type (*)</label>
+                                                <div class="form-input form">
+                                                    {% include 'mixin/form.twig' with {
+                                                        'type': 'select',
+                                                        'args': {
+                                                            'class': ['theme-input'],
+                                                            'data': {'catalog-cart-delivery': ''}
+                                                        }
+                                                    } %}
+
+                                                    {# include cart options #}
+                                                    {% include 'catalog.cart.options.twig' %}
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <div class="col-md-6">
                                             <div class="single-form form-default">
                                                 <label>Country (*)</label>
@@ -348,16 +367,21 @@
                             <h5 class="title">Total</h5>
 
                             <div class="sub-total-price">
-                                <div class="total-price shipping">
-                                    <span class="value fw-bold">Shipping:</span>
-                                    <span class="price">Free</span>
+                                <div class="total-price">
+                                    <span class="value">Subtotal:</span>
+                                    <span class="price float-end" data-catalog-cart-total>$0.00</span>
                                 </div>
                             </div>
-
+                            <div class="sub-total-price">
+                                <div class="total-price">
+                                    <span class="value">Shipping:</span>
+                                    <span class="price float-end" data-catalog-cart-total-service>$0.00</span>
+                                </div>
+                            </div>
                             <div class="total-payable">
                                 <div class="payable-price">
-                                    <span class="value fw-bold">Subotal Price:</span>
-                                    <span class="price" data-catalog-cart-total>$144.00</span>
+                                    <span class="value">Total:</span>
+                                    <span class="price float-end" data-catalog-cart-total-all>$0.00</span>
                                 </div>
                             </div>
 

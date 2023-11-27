@@ -1,5 +1,5 @@
-{% if parent != NIL %}
-    {% set subnodes = categories.where('parent', parent) %}
+{% if parent != null %}
+    {% set subnodes = categories.where('parent_uuid', parent) %}
 
     {% if subnodes.count() %}
         <!-- Start Widget -->
@@ -21,7 +21,7 @@
 <div class="sidebar-widget categories-widget mt-60">
     <h4 class="widget-title position-relative fw-normal mb-5">Categories</h4>
     <ul class="sidebar-check-fields">
-        {% for node in categories.where('parent', NIL).sortBy('order') %}
+        {% for node in categories.where('parent_uuid', null).sortBy('order') %}
             <li>
                 <a href="/{{ parameter('catalog_address', 'catalog') }}/{{ node.address }}">{{ node.title }}</a>
             </li>

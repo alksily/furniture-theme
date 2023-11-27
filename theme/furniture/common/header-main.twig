@@ -61,19 +61,19 @@
 
                     {% set categories = catalog_category() %}
                     <ul>
-                        {% for node in categories.where('parent', NIL) %}
-                            {% if categories.where('parent', '=', node.uuid).count() %}
+                        {% for node in categories.where('parent_uuid', '=', parent ?? null).sortBy('order') %}
+                            {% if categories.where('parent_uuid', '=', node.uuid).count() %}
                                 <li class="has-megamenu">
                                     <a href="#">{{ node.title }}<i class="fas fa-angle-right"></i></a>
                                     <div class="vr6-category-menu-box">
-                                        {% for chunk in categories.where('parent', '=', node.uuid).chunk(2) %}
+                                        {% for chunk in categories.where('parent_uuid', '=', node.uuid).chunk(2) %}
                                             <div class="menu-box-top d-flex">
                                                 {% for item in chunk %}
                                                     <div class="{{ loop.index0 == 0 ? 'menu-box-top-left' : 'menu-box-top-right' }}">
                                                         <h6>{{ item.title }}</h6>
                                                         <ul class="menu-list">
-                                                            {% if categories.where('parent', '=', item.uuid).count() %}
-                                                                {% for el in categories.where('parent', '=', item.uuid) %}
+                                                            {% if categories.where('parent_uuid', '=', item.uuid).count() %}
+                                                                {% for el in categories.where('parent_uuid', '=', item.uuid) %}
                                                                     <li><a href="/{{ parameter('catalog_address', 'catalog') }}/{{ el.address }}">{{ el.title }}</a></li>
                                                                 {% endfor %}
                                                             {% else %}
