@@ -12,7 +12,7 @@
                         {% include 'common/user-switch.twig' %}
                         <div class="header-socials d-flex align-items-center justify-content-end gap-4">
                             {% for title, data in reference('social_network', true) %}
-                                <a href="{{ title.url }}"><i class="fa-brands fa-square-{{ title|lower }} fa-{{ title|lower }}"></i> {{ title }}</a>
+                                <a href="{{ title.url }}"><i class="fa-brands fa-square-{{ title|lower }} fa-{{ title|lower }}"></i></a>
                             {% endfor %}
                         </div>
                     </div>
