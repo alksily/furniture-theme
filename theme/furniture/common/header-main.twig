@@ -11,9 +11,9 @@
                     <div class="d-flex align-items-center justify-content-end gap-60">
                         {% include 'common/user-switch.twig' %}
                         <div class="header-socials d-flex align-items-center justify-content-end gap-4">
-                            <a href="{{ parameter('var_soc_facebook', '#') }}" target="_blank"><i class="fa-brands fa-square-facebook"></i></a>
-                            <a href="{{ parameter('var_soc_instagram', '#') }}" target="_blank"><i class="fa-brands fa-square-twitter"></i></a>
-                            <a href="{{ parameter('var_soc_twitter', '#') }}" target="_blank"><i class="fa-brands fa-square-instagram"></i></a>
+                            {% for title, data in reference('social_network', true) %}
+                                <a href="{{ title.url }}"><i class="fa-brands fa-square-{{ title|lower }} fa-{{ title|lower }}"></i> {{ title }}</a>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
